@@ -1,0 +1,20 @@
+{% extends "base.html" %} {% block title %}Add Flavor - Empanada Production
+Tracker{% endblock %} {% block content %}
+<h1>Add New Flavor</h1>
+
+<form method="POST">
+  <div class="form-group">
+    <label for="name">Flavor Name:</label>
+    <input type="text" name="name" id="name" required maxlength="50" />
+  </div>
+  <button type="submit" class="btn">Add Flavor</button>
+</form>
+
+<div style="margin-top: 20px">
+  <p>
+    <a href="{{ url_for('production') }}" class="btn btn-secondary"
+      >Back to Production</a
+    >
+  </p>
+</div>
+{% endblock %}

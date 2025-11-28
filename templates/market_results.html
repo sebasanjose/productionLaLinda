@@ -1,0 +1,142 @@
+{% extends "base.html" %} {% block title %}Market Results - Empanada Production
+Tracker{% endblock %} {% block content %}
+<h1>Market Results</h1>
+
+{% if event %}
+<div
+  style="
+    margin-bottom: 20px;
+    padding: 15px;
+    background: #f8f9fa;
+    border-radius: 5px;
+  "
+>
+  <h2>{{ event.market_name }} - {{ event.event_date }}</h2>
+  {% if event.cash %}
+  <p><strong>Total Cash Recorded:</strong> ${{ "%.2f"|format(event.cash) }}</p>
+  {% else %}
+  <p><strong>Total Cash:</strong> Not yet recorded</p>
+  {% endif %}
+</div>
+
+<h2>Record Sales Results</h2>
+<form method="POST">
+  <div style="margin-bottom: 20px">
+    <div class="form-group" style="display: inline-block; margin-right: 20px">
+      <label for="flavor_id">Select Flavor:</label>
+      <select name="flavor_id" id="flavor_id" required>
+        {% for flavor in flavors %}
+        <option value="{{ flavor.id }}">{{ flavor.name }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="form-group" style="display: inline-block; margin-right: 20px">
+      <label for="brought">Dozens Brought:</label>
+      <input
+        type="number"
+        name="brought"
+        id="brought"
+        step="0.1"
+        min="0"
+        required
+      />
+    </div>
+    <div class="form-group" style="display: inline-block; margin-right: 20px">
+      <label for="sold">Dozens Sold:</label>
+      <input type="number" name="sold" id="sold" step="0.1" min="0" required />
+    </div>
+    <div class="form-group" style="display: inline-block">
+      <label for="leftover">Dozens Leftover:</label>
+      <input
+        type="number"
+        name="leftover"
+        id="leftover"
+        step="0.1"
+        min="0"
+        required
+      />
+    </div>
+    <button
+      type="submit"
+      class="btn"
+      style="margin-left: 20px; vertical-align: middle"
+    >
+      Record Results
+    </button>
+  </div>
+</form>
+
+<h2>Results for This Market Event</h2>
+<table class="data-table">
+  <thead>
+    <tr>
+      <th>Flavor</th>
+      <th>Allocated</th>
+      <th>Brought</th>
+      <th>Sold</th>
+      <th>Leftover</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% if results %} {% for result in results %}
+    <tr>
+      <td>{{ result.name }}</td>
+      <td>{{ "%.1f"|format(result.allocated or 0) }}</td>
+      <td>{{ "%.1f"|format(result.brought or 0) }}</td>
+      <td>{{ "%.1f"|format(result.sold or 0) }}</td>
+      <td>{{ "%.1f"|format(result.leftover or 0) }}</td>
+    </tr>
+    {% endfor %} {% else %}
+    <tr>
+      <td colspan="5" style="text-align: center; font-style: italic">
+        No results have been recorded for this market event yet.
+      </td>
+    </tr>
+    {% endif %}
+  </tbody>
+</table>
+
+<div style="margin-top: 20px">
+  {% if event.cash is none %}
+  <form
+    method="POST"
+    action="{{ url_for('market_results', event_id=event_id) }}"
+    style="display: inline-block"
+  >
+    <input type="hidden" name="record_cash" value="1" />
+    <div class="form-group" style="display: inline-block; margin-right: 10px">
+      <label for="cash_amount">Record Total Cash Received:</label>
+      <input
+        type="number"
+        name="cash_amount"
+        id="cash_amount"
+        step="0.01"
+        min="0"
+        placeholder="Enter total cash"
+        required
+      />
+    </div>
+    <button type="submit" class="btn btn-secondary">Record Cash</button>
+  </form>
+  {% endif %}
+</div>
+
+<p>
+  <strong>Note:</strong> The sum of "Dozens Sold" and "Dozens Leftover" must
+  equal "Dozens Brought". You can only record results for flavors that have been
+  previously allocated to this market event. "Dozens Brought" cannot exceed the
+  amount that was allocated for each flavor.
+</p>
+
+{% else %}
+<div
+  style="
+    padding: 20px;
+    background: #f8d7da;
+    border: 1px solid #f5c6cb;
+    border-radius: 5px;
+  "
+>
+  <p>The specified market event could not be found.</p>
+</div>
+{% endif %} {% endblock %}
