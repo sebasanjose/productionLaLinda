@@ -92,4 +92,14 @@ After fixing the current test failures, consider:
 
 1. Adding more test cases to increase coverage
 2. Adding integration tests with a real test database
-3. Setting up continuous integration to run tests automatically
+
+## Continuous Integration
+
+Tests are now automatically run using GitHub Actions:
+
+1. Every push to the `main` branch triggers the test workflow
+2. Every pull request to the `main` branch triggers the test workflow
+3. The workflow runs all tests and generates a coverage report
+4. You can view the test results in the Actions tab of the GitHub repository
+
+To see the workflow configuration, check the `.github/workflows/python-tests.yml` file.
