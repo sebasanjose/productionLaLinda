@@ -1,4 +1,4 @@
-- should be able to input only one type of tapa 
+- [x] should be able to input only one type of tapa
 - inventory should show also available tapas
 - el sistema deberia permitir tomar notas
-- el sistema deberia evaluar las notas y sugerir alertas o cambios en el inventario o ingredientes para cumpliz con los objetivos de produccion
+- el sistema deberia evaluar las notas y sugerir alertas o cambios en el inventario o ingredientes para cumplir con los objetivos de produccion

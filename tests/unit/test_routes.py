@@ -283,3 +283,63 @@ def test_add_market_route_post_success(client, app, mock_db):
     
     # Check that the transaction was committed
     assert mock_db.committed
+def test_production_route_post_only_regular_tapas(client, app, mock_db):
+    """Test POST to production route with only regular tapas (ghee defaults to 0)."""
+    response = client.post('/production', data={
+        'action': 'tapas',
+        'date': '2023-01-01',
+        'regular_dozens': '10'
+    }, follow_redirects=True)
+
+    # Check flash message
+    assert b'Tapas production recorded: 10.0 regular, 0.0 ghee dozens' in response.data
+
+    # Check database insert
+    insert_found = False
+    expected_params = ('2023-01-01', 10.0, 0.0)
+    for query, params in mock_db.cursor_obj.executed_queries:
+        if 'INSERT INTO tapas_production' in query and params == expected_params:
+            insert_found = True
+            break
+    assert insert_found, "Expected INSERT with regular=10.0, ghee=0.0"
+
+
+def test_production_route_post_only_ghee_tapas(client, app, mock_db):
+    """Test POST to production route with only ghee tapas (regular defaults to 0)."""
+    response = client.post('/production', data={
+        'action': 'tapas',
+        'date': '2023-01-02',
+        'ghee_dozens': '5'
+    }, follow_redirects=True)
+
+    # Check flash message
+    assert b'Tapas production recorded: 0.0 regular, 5.0 ghee dozens' in response.data
+
+    # Check database insert
+    insert_found = False
+    expected_params = ('2023-01-02', 0.0, 5.0)
+    for query, params in mock_db.cursor_obj.executed_queries:
+        if 'INSERT INTO tapas_production' in query and params == expected_params:
+            insert_found = True
+            break
+    assert insert_found, "Expected INSERT with regular=0.0, ghee=5.0"
+
+
+def test_production_route_post_no_tapas(client, app, mock_db):
+    """Test POST to production route with neither tapas type (both default to 0)."""
+    response = client.post('/production', data={
+        'action': 'tapas',
+        'date': '2023-01-03'
+    }, follow_redirects=True)
+
+    # Check flash message
+    assert b'Tapas production recorded: 0.0 regular, 0.0 ghee dozens' in response.data
+
+    # Check database insert
+    insert_found = False
+    expected_params = ('2023-01-03', 0.0, 0.0)
+    for query, params in mock_db.cursor_obj.executed_queries:
+        if 'INSERT INTO tapas_production' in query and params == expected_params:
+            insert_found = True
+            break
+    assert insert_found, "Expected INSERT with regular=0.0, ghee=0.0"
