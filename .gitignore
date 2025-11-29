@@ -1,1 +1,3 @@
 empanada_tracker.db
+*.pyc
+.gitignore
