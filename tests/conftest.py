@@ -120,6 +120,24 @@ def init_test_db(db_path):
     conn.commit()
     conn.close()
 
+class MockRow:
+    """A mock class that mimics sqlite3.Row, supporting both index and key access."""
+    def __init__(self, data, keys=None):
+        if isinstance(data, dict):
+            self._keys = list(data.keys())
+            self._values = list(data.values())
+        else:
+            self._values = list(data) if not isinstance(data, (list, tuple)) else list(data)
+            self._keys = keys or [str(i) for i in range(len(self._values))]
+    
+    def __getitem__(self, key):
+        if isinstance(key, int):
+            return self._values[key]
+        return self._values[self._keys.index(key)]
+    
+    def keys(self):
+        return self._keys
+
 @pytest.fixture
 def mock_db(monkeypatch):
     """Fixture to mock database connections and operations."""
@@ -147,12 +165,19 @@ def mock_db(monkeypatch):
             # If the query is checking for available empanadas
             if self.last_query and 'available' in self.last_query:
                 if isinstance(self.mock_data.get('fetchone'), list):
-                    return {'available': self.mock_data.get('fetchone')[0]}
-                return self.mock_data.get('fetchone', {'available': 10.0})
+                    # Return a MockRow that supports both [0] and key access
+                    return MockRow({'available': self.mock_data.get('fetchone')[0]})
+                data = self.mock_data.get('fetchone', {'available': 10.0})
+                if isinstance(data, dict):
+                    return MockRow(data)
+                return data
             # If the query is checking for sales
             elif self.last_query and 'sold IS NOT NULL' in self.last_query:
                 return self.mock_data.get('fetchone')
-            return self.mock_data.get('fetchone', None)
+            data = self.mock_data.get('fetchone', None)
+            if isinstance(data, dict):
+                return MockRow(data)
+            return data
     
     class MockConnection:
         def __init__(self):
