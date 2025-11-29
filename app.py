@@ -84,8 +84,8 @@ def production():
         date_str = request.form.get('date', date.today().isoformat())
         
         if action == 'tapas':
-            regular = float(request.form['regular_dozens'])
-            ghee = float(request.form['ghee_dozens'])
+            regular = float(request.form.get('regular_dozens', '0'))
+            ghee = float(request.form.get('ghee_dozens', '0'))
             conn.execute('INSERT INTO tapas_production (date, regular_dozens, ghee_dozens) VALUES (?, ?, ?)',
                         (date_str, regular, ghee))
             conn.commit()
