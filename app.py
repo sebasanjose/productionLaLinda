@@ -59,10 +59,20 @@ def inventory():
     conn = get_db_connection()
     wrapped_inventory = get_wrapped_inventory(conn)
     baked_inventory = get_fully_baked_inventory(conn)
+    
+    # Fetch tapas production totals
+    tapas_totals = conn.execute('''
+        SELECT COALESCE(SUM(regular_dozens), 0) AS total_regular,
+               COALESCE(SUM(ghee_dozens), 0) AS total_ghee,
+               COALESCE(SUM(regular_dozens + ghee_dozens), 0) AS grand_total
+        FROM tapas_production
+    ''').fetchone()
+    
     conn.close()
     return render_template('inventory.html', 
                          wrapped_inventory=wrapped_inventory, 
-                         baked_inventory=baked_inventory)
+                         baked_inventory=baked_inventory,
+                         tapas_totals=tapas_totals)
 
 @app.route('/production', methods=['GET', 'POST'])
 def production():
@@ -298,6 +308,43 @@ def add_market():
             flash(f'Market "{name}" already exists')
     
     return render_template('add_market.html')
+
+@app.route('/tapas_production')
+def tapas_production():
+    conn = get_db_connection()
+    
+    # Get all tapas production records
+    production_records = conn.execute('''
+        SELECT date, regular_dozens, ghee_dozens
+        FROM tapas_production
+        ORDER BY date DESC
+    ''').fetchall()
+    
+    # Calculate totals
+    totals = conn.execute('''
+        SELECT COALESCE(SUM(regular_dozens), 0) AS total_regular,
+               COALESCE(SUM(ghee_dozens), 0) AS total_ghee,
+               COALESCE(SUM(regular_dozens + ghee_dozens), 0) AS grand_total
+        FROM tapas_production
+    ''').fetchone()
+    
+    # Get weekly totals
+    weekly_totals = conn.execute('''
+        SELECT strftime('%Y-%W', date) AS week,
+               SUM(regular_dozens) AS regular,
+               SUM(ghee_dozens) AS ghee,
+               SUM(regular_dozens + ghee_dozens) AS total
+        FROM tapas_production
+        GROUP BY week
+        ORDER BY week DESC
+    ''').fetchall()
+    
+    conn.close()
+    
+    return render_template('tapas_production.html',
+                           records=production_records,
+                           totals=totals,
+                           weekly_totals=weekly_totals)
 
 if __name__ == '__main__':
     app.run(debug=True)
