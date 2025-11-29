@@ -322,9 +322,9 @@ def tapas_production():
     
     # Calculate totals
     totals = conn.execute('''
-        SELECT SUM(regular_dozens) AS total_regular,
-               SUM(ghee_dozens) AS total_ghee,
-               SUM(regular_dozens + ghee_dozens) AS grand_total
+        SELECT COALESCE(SUM(regular_dozens), 0) AS total_regular,
+               COALESCE(SUM(ghee_dozens), 0) AS total_ghee,
+               COALESCE(SUM(regular_dozens + ghee_dozens), 0) AS grand_total
         FROM tapas_production
     ''').fetchone()
     
