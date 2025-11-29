@@ -1,9 +1,8 @@
 {% extends "base.html" %}
 
 {% block title %}Tapas Production - Empanada Production Tracker{% endblock %}
-
 {% block content %}
-<h1>Tapas Production History</h1>
+<h1>Tapas Production Records</h1>
 
 <h2>Production Totals</h2>
 <table class="inventory-table">
@@ -16,21 +15,21 @@
   <tbody>
     <tr>
       <td>Regular</td>
-      <td>{{ "%.1f"|format(totals.total_regular or 0) }}</td>
+      <td>{{ "%.1f"|format(totals.total_regular) }}</td>
     </tr>
     <tr>
       <td>Ghee</td>
-      <td>{{ "%.1f"|format(totals.total_ghee or 0) }}</td>
+      <td>{{ "%.1f"|format(totals.total_ghee) }}</td>
     </tr>
     <tr>
       <td><strong>Grand Total</strong></td>
-      <td><strong>{{ "%.1f"|format(totals.grand_total or 0) }}</strong></td>
+      <td><strong>{{ "%.1f"|format(totals.grand_total) }}</strong></td>
     </tr>
   </tbody>
 </table>
 
 <h2>Weekly Totals</h2>
-<table class="data-table">
+<table class="inventory-table">
   <thead>
     <tr>
       <th>Week</th>
