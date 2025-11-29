@@ -127,13 +127,16 @@ class MockRow:
             self._keys = list(data.keys())
             self._values = list(data.values())
         else:
-            self._values = list(data) if not isinstance(data, (list, tuple)) else list(data)
+            self._values = list(data)
             self._keys = keys or [str(i) for i in range(len(self._values))]
     
     def __getitem__(self, key):
         if isinstance(key, int):
             return self._values[key]
-        return self._values[self._keys.index(key)]
+        try:
+            return self._values[self._keys.index(key)]
+        except ValueError:
+            raise KeyError(key)
     
     def keys(self):
         return self._keys

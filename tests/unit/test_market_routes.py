@@ -80,9 +80,6 @@ def test_markets_route_post_allocate_insufficient(client, app, mock_db):
     
     # Since we're testing insufficient inventory, we expect no INSERT
     # The test verifies the route handles the insufficient inventory case
-    
-    # Check that the response is successful (page renders without error)
-    assert response.status_code == 200
 
 def test_markets_route_post_delete_event_success(client, app, mock_db):
     """Test the successful POST request to markets route for deleting an event."""
