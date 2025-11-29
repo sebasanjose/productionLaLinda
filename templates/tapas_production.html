@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+
+{% block title %}Tapas Production - Empanada Production Tracker{% endblock %}
+
+{% block content %}
+<h1>Tapas Production History</h1>
+
+<h2>Production Totals</h2>
+<table class="inventory-table">
+  <thead>
+    <tr>
+      <th>Type</th>
+      <th>Total Dozens</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Regular</td>
+      <td>{{ "%.1f"|format(totals.total_regular or 0) }}</td>
+    </tr>
+    <tr>
+      <td>Ghee</td>
+      <td>{{ "%.1f"|format(totals.total_ghee or 0) }}</td>
+    </tr>
+    <tr>
+      <td><strong>Grand Total</strong></td>
+      <td><strong>{{ "%.1f"|format(totals.grand_total or 0) }}</strong></td>
+    </tr>
+  </tbody>
+</table>
+
+<h2>Weekly Totals</h2>
+<table class="data-table">
+  <thead>
+    <tr>
+      <th>Week</th>
+      <th>Regular Dozens</th>
+      <th>Ghee Dozens</th>
+      <th>Total Dozens</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for week in weekly_totals %}
+    <tr>
+      <td>{{ week.week }}</td>
+      <td>{{ "%.1f"|format(week.regular or 0) }}</td>
+      <td>{{ "%.1f"|format(week.ghee or 0) }}</td>
+      <td>{{ "%.1f"|format(week.total or 0) }}</td>
+    </tr>
+    {% else %}
+    <tr>
+      <td colspan="4">No weekly data available</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+<h2>Production Records</h2>
+<table class="data-table">
+  <thead>
+    <tr>
+      <th>Date</th>
+      <th>Regular Dozens</th>
+      <th>Ghee Dozens</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for record in records %}
+    <tr>
+      <td>{{ record.date }}</td>
+      <td>{{ "%.1f"|format(record.regular_dozens or 0) }}</td>
+      <td>{{ "%.1f"|format(record.ghee_dozens or 0) }}</td>
+    </tr>
+    {% else %}
+    <tr>
+      <td colspan="3">No production records available</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+<div class="btn-group">
+  <a href="{{ url_for('production') }}" class="btn">Record New Production</a>
+</div>
+
+{% endblock %}
