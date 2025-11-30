@@ -105,7 +105,8 @@ def init_test_db(db_path):
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         date TEXT NOT NULL,
         regular_dozens REAL NOT NULL,
-        ghee_dozens REAL NOT NULL
+        ghee_dozens REAL NOT NULL,
+        notes TEXT
     )
     ''')
     
