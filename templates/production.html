@@ -15,10 +15,16 @@ Production Tracker{% endblock %} {% block content %}
     <input type="number" name="regular_dozens" step="0.1" min="0" />
   </div>
   <div class="form-group">
-    <label>Ghee Tapas (dozens):</label>
-    <input type="number" name="ghee_dozens" step="0.1" min="0" />
+    <label for="ghee_dozens">Ghee Dozens:</label>
+    <input type="number" step="0.1" id="ghee_dozens" name="ghee_dozens" required>
   </div>
-  <button type="submit" class="btn">Record Tapas Production</button>
+
+  <div class="form-group">
+    <label for="notes">Notes:</label>
+    <textarea id="notes" name="notes" rows="2" placeholder="Optional notes..."></textarea>
+  </div>
+
+  <button type="submit" class="btn">Record Production</button>
 </form>
 
 <h3>Add Wrapped (Unbaked) Empanadas</h3>

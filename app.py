@@ -1,14 +1,30 @@
 from flask import Flask, render_template, request, redirect, url_for, flash
 import sqlite3
-from datetime import date
+from flask_sqlalchemy import SQLAlchemy
+from datetime import date, datetime
 
 app = Flask(__name__)
 app.secret_key = 'empanada-tracker-secret-key'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 def get_db_connection():
     conn = sqlite3.connect('empanada_tracker.db')
     conn.row_factory = sqlite3.Row
     return conn
+
+# Create the db object BEFORE defining any models
+db = SQLAlchemy(app)
+# Create the db object BEFORE defining any models
+db = SQLAlchemy(app)
+
+class InventoryLog(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    item_type = db.Column(db.String(50), nullable=False)  # e.g., 'tapas'
+    change_type = db.Column(db.String(20), nullable=False)  # e.g., 'add', 'remove', 'edit'
+    quantity = db.Column(db.Integer, nullable=False)
+    reason = db.Column(db.String(200))  # Optional explanation
+    timestamp = db.Column(db.DateTime, default=datetime.utcnow)
+    # If user auth exists (e.g., User model), add: user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
 
 def get_wrapped_inventory(conn):
     result = conn.execute('''
@@ -91,8 +107,10 @@ def production():
                 flash('Please enter valid numeric values for regular and ghee dozens.', 'error')
                 conn.close()
                 return redirect(url_for('production'))
-            conn.execute('INSERT INTO tapas_production (date, regular_dozens, ghee_dozens) VALUES (?, ?, ?)',
-                        (date_str, regular, ghee))
+            
+            notes = request.form.get('notes', '').strip()
+            conn.execute('INSERT INTO tapas_production (date, regular_dozens, ghee_dozens, notes) VALUES (?, ?, ?, ?)',
+                        (date_str, regular, ghee, notes))
             conn.commit()
             flash(f'Tapas production recorded: {regular} regular, {ghee} ghee dozens')
         
@@ -320,9 +338,9 @@ def tapas_production():
     
     # Get all tapas production records
     production_records = conn.execute('''
-        SELECT date, regular_dozens, ghee_dozens
+        SELECT id, date, regular_dozens, ghee_dozens, notes
         FROM tapas_production
-        ORDER BY date DESC
+        ORDER BY date DESC, id DESC
     ''').fetchall()
     
     # Calculate totals
@@ -350,6 +368,35 @@ def tapas_production():
                            records=production_records,
                            totals=totals,
                            weekly_totals=weekly_totals)
+
+@app.route('/edit_tapas_production/<int:id>', methods=['POST'])
+def edit_tapas_production(id):
+    conn = get_db_connection()
+    action = request.form.get('action')
+    
+    if action == 'delete':
+        conn.execute('DELETE FROM tapas_production WHERE id = ?', (id,))
+        flash('Tapas production record deleted')
+    
+    elif action == 'edit':
+        try:
+            date_str = request.form['date']
+            regular = float(request.form['regular_dozens'])
+            ghee = float(request.form['ghee_dozens'])
+            notes = request.form.get('notes', '').strip()
+            
+            conn.execute('''
+                UPDATE tapas_production 
+                SET date = ?, regular_dozens = ?, ghee_dozens = ?, notes = ?
+                WHERE id = ?
+            ''', (date_str, regular, ghee, notes, id))
+            flash('Tapas production record updated')
+        except (ValueError, KeyError):
+            flash('Error updating record: Invalid data', 'error')
+            
+    conn.commit()
+    conn.close()
+    return redirect(url_for('tapas_production'))
 
 if __name__ == '__main__':
     app.run(debug=True)
