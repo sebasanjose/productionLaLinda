@@ -1,112 +1,130 @@
-{% extends "base.html" %} {% block title %}Markets - Empanada Production
-Tracker{% endblock %} {% block content %}
-<h1>Market Management</h1>
+{% extends "base.html" %}
+{% block title %}Markets - La Linda Tracker{% endblock %}
 
-<!-- Create Event -->
-<div style="margin-bottom: 30px">
-  <h2>Create New Market Event</h2>
-  <form method="POST">
-    <input type="hidden" name="action" value="create_event" />
-    <div class="form-group">
-      <label>Select Market:</label>
-      <select name="market_id" required>
-        {% for m in markets %}
-        <option value="{{ m.id }}">{{ m.name }}</option>
-        {% endfor %}
-      </select>
-    </div>
-    <div class="form-group">
-      <label>Date:</label>
-      <input type="date" name="event_date" value="{{ today }}" required />
-    </div>
-    <button type="submit" class="btn">Create Market Event</button>
-  </form>
+{% block content %}
+<div class="mb-4">
+  <h1>Market Management</h1>
+  <p class="text-muted">Manage market events and allocations.</p>
 </div>
 
-<!-- Allocate -->
-<div style="margin-bottom: 40px">
-  <h2>Allocate Empanadas</h2>
-  <form method="POST">
-    <input type="hidden" name="action" value="allocate" />
-    <div class="form-group">
-      <label>Event:</label>
-      <select name="event_id" required>
-        <option value="">— Choose event —</option>
-        {% for e in market_events %}
-        <option value="{{ e.id }}">
-          {{ e.market_name }} – {{ e.event_date }}
-        </option>
-        {% endfor %}
-      </select>
-    </div>
-    <div class="form-group">
-      <label>Flavor:</label>
-      <select name="flavor_id" required>
-        {% for f in flavors %}
-        <option value="{{ f.id }}">{{ f.name }}</option>
-        {% endfor %}
-      </select>
-    </div>
-    <div class="form-group">
-      <label>Dozens:</label>
-      <input type="number" name="dozens" step="0.1" min="0.1" required />
-    </div>
-    <button type="submit" class="btn">Allocate</button>
-  </form>
+<div class="grid grid-cols-2 gap-4 mb-4">
+  <!-- Create Event -->
+  <div class="card">
+    <h3>📅 Create New Market Event</h3>
+    <form method="POST">
+      <input type="hidden" name="action" value="create_event" />
+      <div class="form-group">
+        <label>Select Market</label>
+        <select name="market_id" required>
+          {% for m in markets %}
+          <option value="{{ m.id }}">{{ m.name }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Date</label>
+        <input type="date" name="event_date" value="{{ today }}" required />
+      </div>
+      <button type="submit" class="btn btn-primary" style="width: 100%">Create Market Event</button>
+    </form>
+  </div>
+
+  <!-- Allocate -->
+  <div class="card">
+    <h3>📦 Allocate Empanadas</h3>
+    <form method="POST">
+      <input type="hidden" name="action" value="allocate" />
+      <div class="form-group">
+        <label>Event</label>
+        <select name="event_id" required>
+          <option value="">— Choose event —</option>
+          {% for e in market_events %}
+          <option value="{{ e.id }}">
+            {{ e.market_name }} – {{ e.event_date }}
+          </option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="grid grid-cols-2 gap-4">
+        <div class="form-group">
+          <label>Flavor</label>
+          <select name="flavor_id" required>
+            {% for f in flavors %}
+            <option value="{{ f.id }}">{{ f.name }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Dozens</label>
+          <input type="number" name="dozens" step="0.1" min="0.1" required placeholder="0.0" />
+        </div>
+      </div>
+      <button type="submit" class="btn btn-primary" style="width: 100%">Allocate</button>
+    </form>
+  </div>
 </div>
 
 <!-- Show Allocations -->
-<h2>Current Allocations</h2>
+<div class="mb-4">
+  <h2>Current Allocations</h2>
+</div>
 
 {% if market_events|length == 0 %}
-<p>No market events yet.</p>
-{% else %} {% for event in market_events %}
-<div
-  style="
-    border: 1px solid #ddd;
-    padding: 15px;
-    margin-bottom: 20px;
-    border-radius: 8px;
-  "
->
-  <h3>
-    #{{ event.id }} – {{ event.market_name }} – {{ event.event_date }}
-    <small>
-      (Total:
-      <strong>{{ "%.1f"|format(event.total_allocated) }}</strong> dozen{% if
-      event.total_allocated != 1 and event.total_allocated != 0 %}s{% endif %})
-    </small>
-  </h3>
-
-  {% set allocs = event_allocations[event.id]|default([]) %} {% if allocs|length
-  > 0 %}
-  <table class="data-table" style="width: 60%">
-    <tr>
-      <th>Flavor</th>
-      <th>Allocated (dozens)</th>
-    </tr>
-    {% for a in allocs %}
-    <tr>
-      <td>{{ a.flavor_name }}</td>
-      <td><strong>{{ "%.1f"|format(a.allocated) }}</strong></td>
-    </tr>
-    {% endfor %}
-  </table>
-  {% else %}
-  <em>No empanadas allocated yet.</em>
-  {% endif %}
-
-  <p style="margin-top:10px;">
-    <a href="{{ url_for('market_results', event_id=event.id) }}" class="btn btn-secondary">Enter Results</a>
-    
-    <form method="POST" style="display:inline; margin-left:10px;">
-        <input type="hidden" name="action" value="delete_event">
-        <input type="hidden" name="event_id" value="{{ event.id }}">
-        <button type="submit" class="btn" style="background:#d9534f; color:white;"
-                onclick="return confirm('Are you sure you want to delete this market event?\n\nThis will also remove all allocations. This cannot be undone.')">
-            Delete Event
-        </button>
-    </form>
-</p>
+<div class="card text-center">
+  <p class="text-muted">No market events yet.</p>
 </div>
-{% endfor %} {% endif %} {% endblock %}
+{% else %}
+{% for event in market_events %}
+<div class="card mb-4">
+  <div class="flex"
+    style="justify-content: space-between; align-items: center; margin-bottom: var(--spacing-md); border-bottom: 1px solid var(--border-color); padding-bottom: var(--spacing-md);">
+    <div>
+      <h3 style="margin-bottom: 0;">{{ event.market_name }}</h3>
+      <span class="text-muted" style="font-size: 0.875rem;">{{ event.event_date }}</span>
+    </div>
+    <div class="flex" style="align-items: center; gap: var(--spacing-md);">
+      <span style="font-weight: 600; color: var(--primary-color);">
+        Total: {{ "%.1f"|format(event.total_allocated) }} dozen{% if event.total_allocated != 1 and
+        event.total_allocated != 0 %}s{% endif %}
+      </span>
+      <div class="flex gap-4">
+        <a href="{{ url_for('market_results', event_id=event.id) }}" class="btn btn-primary">Enter Results</a>
+        <form method="POST" style="display:inline;">
+          <input type="hidden" name="action" value="delete_event">
+          <input type="hidden" name="event_id" value="{{ event.id }}">
+          <button type="submit" class="btn btn-danger"
+            onclick="return confirm('Are you sure you want to delete this market event?\n\nThis will also remove all allocations. This cannot be undone.')">
+            Delete
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  {% set allocs = event_allocations[event.id]|default([]) %}
+  {% if allocs|length > 0 %}
+  <div class="table-container">
+    <table>
+      <thead>
+        <tr>
+          <th>Flavor</th>
+          <th>Allocated (dozens)</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for a in allocs %}
+        <tr>
+          <td>{{ a.flavor_name }}</td>
+          <td><strong>{{ "%.1f"|format(a.allocated) }}</strong></td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+  <p class="text-muted" style="font-style: italic;">No empanadas allocated yet.</p>
+  {% endif %}
+</div>
+{% endfor %}
+{% endif %}
+{% endblock %}

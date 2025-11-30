@@ -1,124 +1,108 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>{% block title %}Empanada Production Tracker{% endblock %}</title>
-    <style>
-      body {
-        font-family: Arial, sans-serif;
-        margin: 20px;
-      }
-      .container {
-        max-width: 1200px;
-        margin: 0 auto;
-      }
-      .nav-bar {
-        background: #333;
-        padding: 10px;
-        margin-bottom: 20px;
-      }
-      .nav-bar a {
-        color: white;
-        text-decoration: none;
-        margin-right: 20px;
-        padding: 8px 12px;
-      }
-      .nav-bar a:hover {
-        background: #555;
-      }
-      .flash-messages {
-        margin: 10px 0;
-      }
-      .flash-messages .message {
-        padding: 10px;
-        margin: 5px 0;
-        border-radius: 4px;
-      }
-      .flash-success {
-        background-color: #d4edda;
-        color: #155724;
-        border: 1px solid #c3e6cb;
-      }
-      .flash-error {
-        background-color: #f8d7da;
-        color: #721c24;
-        border: 1px solid #f5c6cb;
-      }
-      .inventory-table,
-      .data-table {
-        width: 100%;
-        border-collapse: collapse;
-        margin: 20px 0;
-      }
-      .inventory-table th,
-      .inventory-table td,
-      .data-table th,
-      .data-table td {
-        border: 1px solid #ddd;
-        padding: 12px;
-        text-align: left;
-      }
-      .inventory-table th,
-      .data-table th {
-        background-color: #f2f2f2;
-      }
-      .form-group {
-        margin: 15px 0;
-      }
-      .form-group label {
-        display: block;
-        margin-bottom: 5px;
-        font-weight: bold;
-      }
-      .form-group input,
-      .form-group select {
-        width: 200px;
-        padding: 8px;
-      }
-      .btn {
-        padding: 10px 20px;
-        background: #007bff;
-        color: white;
-        text-decoration: none;
-        border: none;
-        border-radius: 4px;
-        cursor: pointer;
-      }
-      .btn:hover {
-        background: #0056b3;
-      }
-      .btn-secondary {
-        background: #6c757d;
-      }
-      .btn-secondary:hover {
-        background: #545b62;
-      }
-      .btn-group {
-        margin: 10px 0;
-      }
-      .btn-group .btn {
-        margin-right: 10px;
-      }
-    </style>
-  </head>
-  <body>
-    <div class="container">
-      <div class="nav-bar">
-        <a href="{{ url_for('dashboard') }}">Dashboard</a>
-        <a href="{{ url_for('inventory') }}">Inventory</a>
-        <a href="{{ url_for('production') }}">Production</a>
-        <a href="{{ url_for('markets') }}">Markets</a>
-      </div>
+{% extends "base.html" %}
 
-      {% with messages = get_flashed_messages(with_categories=true) %} {% if
-      messages %}
-      <div class="flash-messages">
-        {% for category, message in messages %}
-        <div class="message flash-{{ category }}">{{ message }}</div>
-        {% endfor %}
-      </div>
-      {% endif %} {% endwith %} {% block content %}{% endblock %}
+{% block title %}Dashboard - La Linda Tracker{% endblock %}
+
+{% block content %}
+<div class="mb-4">
+  <h1>Dashboard</h1>
+  <p class="text-muted">Overview of current inventory and recent activity.</p>
+</div>
+
+<div class="grid grid-cols-2 gap-4 mb-4">
+  <!-- Wrapped Inventory Card -->
+  <div class="card">
+    <h3>🥟 Wrapped (Unbaked)</h3>
+    {% if wrapped_inventory %}
+    <div class="table-container">
+      <table>
+        <thead>
+          <tr>
+            <th>Flavor</th>
+            <th>Dozens</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for flavor, quantity in wrapped_inventory.items() %}
+          <tr>
+            <td>{{ flavor }}</td>
+            <td>{{ "%.1f"|format(quantity) }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
     </div>
-  </body>
-</html>
+    {% else %}
+    <p class="text-muted">No wrapped inventory.</p>
+    {% endif %}
+  </div>
+
+  <!-- Baked Inventory Card -->
+  <div class="card">
+    <h3>🔥 Fully Baked</h3>
+    {% if baked_inventory %}
+    <div class="table-container">
+      <table>
+        <thead>
+          <tr>
+            <th>Flavor</th>
+            <th>Available</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for flavor, quantity in baked_inventory.items() %}
+          <tr>
+            <td>{{ flavor }}</td>
+            <td>{{ "%.1f"|format(quantity) }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    {% else %}
+    <p class="text-muted">No baked inventory available.</p>
+    {% endif %}
+  </div>
+</div>
+
+<!-- Recent Events Section -->
+<div class="card">
+  <div class="flex" style="justify-content: space-between; align-items: center; margin-bottom: var(--spacing-md);">
+    <h3>Recent Market Events</h3>
+    <a href="{{ url_for('markets') }}" class="btn btn-secondary">View All</a>
+  </div>
+
+  {% if recent_events %}
+  <div class="table-container">
+    <table>
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>Market</th>
+          <th>Sold</th>
+          <th>Leftover</th>
+          <th>Cash</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for event in recent_events %}
+        <tr>
+          <td>{{ event['event_date'] }}</td>
+          <td>{{ event['market_name'] }}</td>
+          <td>{{ "%.1f"|format(event['total_sold']) }}</td>
+          <td>{{ "%.1f"|format(event['total_leftover']) }}</td>
+          <td>${{ "%.2f"|format(event['cash'] if event['cash'] else 0) }}</td>
+          <td>
+            <a href="{{ url_for('market_results', event_id=event['id']) }}" class="btn btn-primary"
+              style="padding: 0.25rem 0.5rem; font-size: 0.75rem;">Results</a>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+  <p class="text-muted">No recent market events found.</p>
+  {% endif %}
+</div>
+{% endblock %}
