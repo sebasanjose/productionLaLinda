@@ -37,23 +37,22 @@
                 <td>
                     <span class="view-mode">{{ record.date }}</span>
                     <label for="date-{{ record.id }}" style="position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden;">Date</label>
-                    <input type="date" id="date-{{ record.id }}" name="date" value="{{ record.date }}" class="edit-mode" style="display: none;"
+                    <input type="date" id="date-{{ record.id }}" name="date" value="{{ record.date }}" class="edit-mode hidden"
                         required>
                 </td>
                 <td>
                     <span class="view-mode">{{ "%.1f"|format(record.regular_dozens) }}</span>
                     <input type="number" step="0.1" name="regular_dozens" value="{{ record.regular_dozens }}"
-                        class="edit-mode" style="display: none;" required>
+                        class="edit-mode hidden" required>
                 </td>
                 <td>
                     <span class="view-mode">{{ "%.1f"|format(record.ghee_dozens) }}</span>
                     <input type="number" step="0.1" name="ghee_dozens" value="{{ record.ghee_dozens }}"
-                        class="edit-mode" style="display: none;" required>
+                        class="edit-mode hidden" required>
                 </td>
                 <td>
                     <span class="view-mode">{{ record.notes or '' }}</span>
-                    <input type="text" name="notes" value="{{ record.notes or '' }}" class="edit-mode"
-                        style="display: none;">
+                    <input type="text" name="notes" value="{{ record.notes or '' }}" class="edit-mode hidden">
                 </td>
                 <td>
                     <div class="view-mode">
@@ -61,7 +60,7 @@
                         <button type="submit" name="action" value="delete" class="btn-small btn-danger"
                             onclick="return confirm('Are you sure?')">Delete</button>
                     </div>
-                    <div class="edit-mode" style="display: none;">
+                    <div class="edit-mode hidden">
                         <button type="submit" name="action" value="edit" class="btn-small btn-success">Save</button>
                         <button type="button" class="btn-small" onclick="toggleEdit(this)">Cancel</button>
                     </div>
@@ -100,12 +99,16 @@
         const viewModes = row.querySelectorAll('.view-mode');
         const editModes = row.querySelectorAll('.edit-mode');
 
-        viewModes.forEach(el => el.style.display = el.style.display === 'none' ? '' : 'none');
-        editModes.forEach(el => el.style.display = el.style.display === 'none' ? '' : 'none');
+        viewModes.forEach(el => el.classList.toggle('hidden'));
+        editModes.forEach(el => el.classList.toggle('hidden'));
     }
 </script>
 
 <style>
+    .hidden {
+        display: none !important;
+    }
+
     .btn-small {
         padding: 4px 8px;
         font-size: 0.9em;
