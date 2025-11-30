@@ -36,7 +36,8 @@
             <form action="{{ url_for('edit_tapas_production', id=record.id) }}" method="POST" style="display: inline;">
                 <td>
                     <span class="view-mode">{{ record.date }}</span>
-                    <input type="date" name="date" value="{{ record.date }}" class="edit-mode" style="display: none;"
+                    <label for="date-{{ record.id }}" style="position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden;">Date</label>
+                    <input type="date" id="date-{{ record.id }}" name="date" value="{{ record.date }}" class="edit-mode" style="display: none;"
                         required>
                 </td>
                 <td>
