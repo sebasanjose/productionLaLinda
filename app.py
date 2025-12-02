@@ -379,20 +379,25 @@ def edit_tapas_production(id):
         flash('Tapas production record deleted')
     
     elif action == 'edit':
-        try:
-            date_str = request.form['date']
-            regular = float(request.form['regular_dozens'])
-            ghee = float(request.form['ghee_dozens'])
-            notes = request.form.get('notes', '').strip()
-            
-            conn.execute('''
-                UPDATE tapas_production 
-                SET date = ?, regular_dozens = ?, ghee_dozens = ?, notes = ?
-                WHERE id = ?
-            ''', (date_str, regular, ghee, notes, id))
-            flash('Tapas production record updated')
-        except (ValueError, KeyError):
-            flash('Error updating record: Invalid data', 'error')
+        required_fields = ['date', 'regular_dozens', 'ghee_dozens']
+        missing_fields = [field for field in required_fields if field not in request.form or not request.form[field].strip()]
+        if missing_fields:
+            flash('Error updating record: Missing field(s): ' + ', '.join(missing_fields), 'error')
+        else:
+            try:
+                date_str = request.form['date']
+                regular = float(request.form['regular_dozens'])
+                ghee = float(request.form['ghee_dozens'])
+                notes = request.form.get('notes', '').strip()
+                
+                conn.execute('''
+                    UPDATE tapas_production 
+                    SET date = ?, regular_dozens = ?, ghee_dozens = ?, notes = ?
+                    WHERE id = ?
+                ''', (date_str, regular, ghee, notes, id))
+                flash('Tapas production record updated')
+            except ValueError:
+                flash('Error updating record: Invalid data type for regular or ghee dozens', 'error')
             
     conn.commit()
     conn.close()
