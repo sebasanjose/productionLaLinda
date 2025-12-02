@@ -15,18 +15,18 @@
       <input type="hidden" name="action" value="tapas" />
 
       <div class="form-group">
-        <label>Date</label>
-        <input type="date" name="date" value="{{ request.args.get('date', '') }}" />
+        <label for="tapas-date">Date</label>
+        <input type="date" name="date" id="tapas-date" value="{{ request.args.get('date', '') }}" />
       </div>
 
       <div class="grid grid-cols-2 gap-4">
         <div class="form-group">
-          <label>Regular (dozens)</label>
-          <input type="number" name="regular_dozens" step="0.1" min="0" placeholder="0.0" />
+          <label for="regular-dozens">Regular (dozens)</label>
+          <input type="number" name="regular_dozens" id="regular-dozens" step="0.1" min="0" placeholder="0.0" />
         </div>
         <div class="form-group">
-          <label>Ghee (dozens)</label>
-          <input type="number" name="ghee_dozens" step="0.1" min="0" placeholder="0.0" />
+          <label for="ghee-dozens">Ghee (dozens)</label>
+          <input type="number" name="ghee_dozens" id="ghee-dozens" step="0.1" min="0" placeholder="0.0" />
         </div>
       </div>
 
@@ -41,13 +41,13 @@
       <input type="hidden" name="action" value="wrapped" />
 
       <div class="form-group">
-        <label>Date</label>
-        <input type="date" name="date" value="{{ request.args.get('date', '') }}" />
+        <label for="wrapped-date">Date</label>
+        <input type="date" name="date" id="wrapped-date" value="{{ request.args.get('date', '') }}" />
       </div>
 
       <div class="form-group">
-        <label>Flavor</label>
-        <select name="flavor_id" required>
+        <label for="wrapped-flavor">Flavor</label>
+        <select name="flavor_id" id="wrapped-flavor" required>
           {% for flavor in flavors %}
           <option value="{{ flavor.id }}">{{ flavor.name }}</option>
           {% endfor %}
@@ -55,8 +55,8 @@
       </div>
 
       <div class="form-group">
-        <label>Dozens Wrapped</label>
-        <input type="number" name="dozens" step="0.1" min="0.1" required placeholder="0.0" />
+        <label for="wrapped-dozens">Dozens Wrapped</label>
+        <input type="number" name="dozens" id="wrapped-dozens" step="0.1" min="0.1" required placeholder="0.0" />
       </div>
 
       <button type="submit" class="btn btn-primary" style="width: 100%">Add Wrapped Empanadas</button>
@@ -70,13 +70,13 @@
       <input type="hidden" name="action" value="bake" />
 
       <div class="form-group">
-        <label>Date</label>
-        <input type="date" name="date" value="{{ request.args.get('date', '') }}" />
+        <label for="bake-date">Date</label>
+        <input type="date" name="date" id="bake-date" value="{{ request.args.get('date', '') }}" />
       </div>
 
       <div class="form-group">
-        <label>Flavor</label>
-        <select name="flavor_id" required>
+        <label for="bake-flavor">Flavor</label>
+        <select name="flavor_id" id="bake-flavor" required>
           {% for flavor in flavors %}
           <option value="{{ flavor.id }}">{{ flavor.name }}</option>
           {% endfor %}
@@ -84,8 +84,8 @@
       </div>
 
       <div class="form-group">
-        <label>Dozens to Bake</label>
-        <input type="number" name="dozens" step="0.1" min="0.1" required placeholder="0.0" />
+        <label for="bake-dozens">Dozens to Bake</label>
+        <input type="number" name="dozens" id="bake-dozens" step="0.1" min="0.1" required placeholder="0.0" />
       </div>
 
       <button type="submit" class="btn btn-primary" style="width: 100%">Bake Empanadas</button>
