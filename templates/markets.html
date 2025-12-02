@@ -25,7 +25,7 @@
         <label>Date</label>
         <input type="date" name="event_date" value="{{ today }}" required />
       </div>
-      <button type="submit" class="btn btn-primary" style="width: 100%">Create Market Event</button>
+      <button type="submit" class="btn btn-primary w-full">Create Market Event</button>
     </form>
   </div>
 
@@ -59,7 +59,7 @@
           <input type="number" id="dozens" name="dozens" step="0.1" min="0.1" required placeholder="0.0" />
         </div>
       </div>
-      <button type="submit" class="btn btn-primary" style="width: 100%">Allocate</button>
+      <button type="submit" class="btn btn-primary w-full">Allocate</button>
     </form>
   </div>
 </div>
@@ -75,14 +75,14 @@
   <h2 class="mb-4">Current Allocations</h2>
 {% for event in market_events %}
 <div class="card mb-4">
-  <div class="flex"
-    style="justify-content: space-between; align-items: center; margin-bottom: var(--spacing-md); border-bottom: 1px solid var(--border-color); padding-bottom: var(--spacing-md);">
+  <div class="flex justify-between align-center"
+    style="margin-bottom: var(--spacing-md); border-bottom: 1px solid var(--border-color); padding-bottom: var(--spacing-md);">
     <div>
-      <h3 style="margin-bottom: 0;">{{ event.market_name }}</h3>
-      <span class="text-muted" style="font-size: 0.875rem;">{{ event.event_date }}</span>
+      <h3 class="mb-0">{{ event.market_name }}</h3>
+      <span class="text-muted text-sm">{{ event.event_date }}</span>
     </div>
-    <div class="flex" style="align-items: center; gap: var(--spacing-md);">
-      <span style="font-weight: 600; color: var(--primary-color);">
+    <div class="flex align-center gap-4">
+      <span class="font-semibold" style="color: var(--primary-color);">
         Total: {{ "%.1f"|format(event.total_allocated) }} dozen{% if event.total_allocated != 1 and
         event.total_allocated != 0 %}s{% endif %}
       </span>
@@ -121,7 +121,7 @@
     </table>
   </div>
   {% else %}
-  <p class="text-muted" style="font-style: italic;">No empanadas allocated yet.</p>
+  <p class="text-muted italic">No empanadas allocated yet.</p>
   {% endif %}
 </div>
 {% endfor %}
