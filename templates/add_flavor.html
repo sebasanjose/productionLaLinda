@@ -1,20 +1,24 @@
-{% extends "base.html" %} {% block title %}Add Flavor - Empanada Production
-Tracker{% endblock %} {% block content %}
-<h1>Add New Flavor</h1>
+{% extends "base.html" %}
+{% block title %}Add Flavor - La Linda Tracker{% endblock %}
 
-<form method="POST">
-  <div class="form-group">
-    <label for="name">Flavor Name:</label>
-    <input type="text" name="name" id="name" required maxlength="50" />
-  </div>
-  <button type="submit" class="btn">Add Flavor</button>
-</form>
+{% block content %}
+<div class="mb-4">
+  <h1>Add New Flavor</h1>
+  <p class="text-muted">Create a new empanada flavor.</p>
+</div>
 
-<div style="margin-top: 20px">
-  <p>
-    <a href="{{ url_for('production') }}" class="btn btn-secondary"
-      >Back to Production</a
-    >
-  </p>
+<div class="card" style="max-width: 600px; margin: 0 auto;">
+  <form method="POST">
+    <div class="form-group">
+      <label for="name">Flavor Name</label>
+      <input type="text" name="name" id="name" required maxlength="50" placeholder="e.g. Beef, Chicken, Spinach"
+        autofocus />
+    </div>
+
+    <div class="flex gap-4" style="margin-top: var(--spacing-lg);">
+      <button type="submit" class="btn btn-primary">Add Flavor</button>
+      <a href="{{ url_for('production') }}" class="btn btn-secondary">Cancel</a>
+    </div>
+  </form>
 </div>
 {% endblock %}

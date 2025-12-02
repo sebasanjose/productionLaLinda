@@ -1,4 +1,9 @@
 - [x] should be able to input only one type of tapa
+- date in add unbaked empanadas should be today by default
+- add flavor should show the already existing flavors
+- when adding unbaked, the message should mention the flavor name
+- when adding hc unbaked, nothing happens
+- i should be able to add baked regardless unbaked exists
 - inventory should show also available tapas
 - el sistema deberia permitir tomar notas
 - el sistema deberia evaluar las notas y sugerir alertas o cambios en el inventario o ingredientes para cumplir con los objetivos de produccion

@@ -1,65 +1,82 @@
-{% extends "base.html" %} {% block title %}Inventory - Empanada Production
-Tracker{% endblock %} {% block content %}
-<h1>Current Inventory</h1>
+{% extends "base.html" %}
+{% block title %}Inventory - La Linda Tracker{% endblock %}
 
-<h2>Wrapped but Unbaked Empanadas</h2>
-<table class="inventory-table">
-  <thead>
-    <tr>
-      <th>Flavor</th>
-      <th>Dozens Available to Bake</th>
-    </tr>
-  </thead>
-  <tbody>
-    {% for flavor, quantity in wrapped_inventory.items() %}
-    <tr>
-      <td>{{ flavor }}</td>
-      <td>{{ "%.1f"|format(quantity) }}</td>
-    </tr>
-    {% endfor %}
-  </tbody>
-</table>
+{% block content %}
+<div class="mb-4">
+  <h1>Inventory Overview</h1>
+</div>
 
-<h2>Fully Baked Empanadas (Available for Markets)</h2>
-<table class="inventory-table">
-  <thead>
-    <tr>
-      <th>Flavor</th>
-      <th>Available Dozens</th>
-    </tr>
-  </thead>
-  <tbody>
-    {% for flavor, quantity in baked_inventory.items() %}
-    <tr>
-      <td>{{ flavor }}</td>
-      <td>{{ "%.1f"|format(quantity) }}</td>
-    </tr>
-    {% endfor %}
-  </tbody>
-</table>
+<div class="grid grid-cols-2 gap-4 mb-4">
+  <div class="card">
+    <h3>🥟 Wrapped (Unbaked)</h3>
+    <div class="table-container">
+      <table>
+        <thead>
+          <tr>
+            <th>Flavor</th>
+            <th>Dozens Available</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for flavor, quantity in wrapped_inventory.items() %}
+          <tr>
+            <td>{{ flavor }}</td>
+            <td>{{ "%.1f"|format(quantity) }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
 
-<h2>Tapas Production Totals</h2>
-<table class="inventory-table">
-  <thead>
-    <tr>
-      <th>Type</th>
-      <th>Total Dozens Produced</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>Regular</td>
-      <td>{{ "%.1f"|format(tapas_totals.total_regular) }}</td>
-    </tr>
-    <tr>
-      <td>Ghee</td>
-      <td>{{ "%.1f"|format(tapas_totals.total_ghee) }}</td>
-    </tr>
-    <tr>
-      <td>Grand Total</td>
-      <td>{{ "%.1f"|format(tapas_totals.grand_total) }}</td>
-    </tr>
-  </tbody>
-</table>
+  <div class="card">
+    <h3>🔥 Fully Baked</h3>
+    <div class="table-container">
+      <table>
+        <thead>
+          <tr>
+            <th>Flavor</th>
+            <th>Available Dozens</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for flavor, quantity in baked_inventory.items() %}
+          <tr>
+            <td>{{ flavor }}</td>
+            <td>{{ "%.1f"|format(quantity) }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
 
+<div class="card">
+  <h3>🏭 Tapas Production Totals</h3>
+  <div class="table-container">
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Total Dozens Produced</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Regular</td>
+          <td>{{ "%.1f"|format(tapas_totals.total_regular) }}</td>
+        </tr>
+        <tr>
+          <td>Ghee</td>
+          <td>{{ "%.1f"|format(tapas_totals.total_ghee) }}</td>
+        </tr>
+        <tr style="font-weight: bold; background-color: #f8fafc;">
+          <td>Grand Total</td>
+          <td>{{ "%.1f"|format(tapas_totals.grand_total) }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
 {% endblock %}
