@@ -15,7 +15,6 @@ def get_db_connection():
 # Create the db object BEFORE defining any models
 db = SQLAlchemy(app)
 # Create the db object BEFORE defining any models
-db = SQLAlchemy(app)
 
 class InventoryLog(db.Model):
     id = db.Column(db.Integer, primary_key=True)
