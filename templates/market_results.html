@@ -9,9 +9,9 @@
 
 {% if event %}
 <div class="card mb-4" style="border-left: 4px solid var(--primary-color);">
-  <div class="flex" style="justify-content: space-between; align-items: center;">
+  <div class="flex justify-between align-center">
     <div>
-      <h2 style="margin-bottom: 0.25rem;">{{ event.market_name }}</h2>
+      <h2 class="mb-0">{{ event.market_name }}</h2>
       <p class="text-muted">{{ event.event_date }}</p>
     </div>
     <div class="text-center" style="background: #f1f5f9; padding: var(--spacing-md); border-radius: var(--radius-md);">
@@ -58,9 +58,9 @@
         </div>
       </div>
 
-      <button type="submit" class="btn btn-primary" style="width: 100%">Record Results</button>
+      <button type="submit" class="btn btn-primary w-full">Record Results</button>
 
-      <p class="text-muted" style="font-size: 0.875rem; margin-top: var(--spacing-md);">
+      <p class="text-muted text-sm" style="margin-top: var(--spacing-md);">
         <strong>Note:</strong> Sold + Leftover must equal Brought.
       </p>
     </form>
@@ -76,8 +76,8 @@
         <label for="cash_amount">Total Cash Received ($)</label>
         <input type="number" name="cash_amount" id="cash_amount" step="0.01" min="0" placeholder="0.00" required />
       </div>
-      <button type="submit" class="btn btn-success"
-        style="width: 100%; background-color: var(--success-color); border-color: var(--success-color); color: white;">Record
+      <button type="submit" class="btn btn-success w-full"
+        style="background-color: var(--success-color); border-color: var(--success-color); color: white;">Record
         Cash</button>
     </form>
     {% else %}

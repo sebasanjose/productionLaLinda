@@ -273,13 +273,24 @@ input:focus, select:focus {
 
 /* Utilities */
 .text-center { text-align: center; }
+.text-muted { color: var(--text-muted); }
 .mt-4 { margin-top: var(--spacing-xl); }
 .mb-4 { margin-bottom: var(--spacing-xl); }
+.mb-0 { margin-bottom: 0; }
 .flex { display: flex; }
+.inline { display: inline; }
 .gap-4 { gap: var(--spacing-md); }
 .grid { display: grid; }
 .grid-cols-2 { grid-template-columns: repeat(2, 1fr); }
 .grid-cols-3 { grid-template-columns: repeat(3, 1fr); }
+
+/* Layout utilities */
+.w-full { width: 100%; }
+.justify-between { justify-content: space-between; }
+.align-center { align-items: center; }
+.text-sm { font-size: 0.875rem; }
+.font-semibold { font-weight: 600; }
+.italic { font-style: italic; }
 
 @media (max-width: 768px) {
     .grid-cols-2, .grid-cols-3 {
