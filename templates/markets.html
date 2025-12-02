@@ -65,15 +65,14 @@
 </div>
 
 <!-- Show Allocations -->
-<div class="mb-4">
-  <h2>Current Allocations</h2>
-</div>
-
 {% if market_events|length == 0 %}
 <div class="card text-center">
+  <h2>Current Allocations</h2>
   <p class="text-muted">No market events yet.</p>
 </div>
 {% else %}
+<section class="allocations-section">
+  <h2 class="mb-4">Current Allocations</h2>
 {% for event in market_events %}
 <div class="card mb-4">
   <div class="flex"
@@ -126,5 +125,6 @@
   {% endif %}
 </div>
 {% endfor %}
+</section>
 {% endif %}
 {% endblock %}
