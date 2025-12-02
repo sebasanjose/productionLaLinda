@@ -93,8 +93,7 @@
           <td>{{ "%.1f"|format(event['total_leftover']) }}</td>
           <td>${{ "%.2f"|format(event['cash'] if event['cash'] else 0) }}</td>
           <td>
-            <a href="{{ url_for('market_results', event_id=event['id']) }}" class="btn btn-primary"
-              style="padding: 0.25rem 0.5rem; font-size: 0.75rem;">Results</a>
+            <a href="{{ url_for('market_results', event_id=event['id']) }}" class="btn btn-primary btn-sm">Results</a>
           </td>
         </tr>
         {% endfor %}

@@ -247,6 +247,11 @@ input:focus, select:focus {
     background-color: #dc2626;
 }
 
+.btn-sm {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.75rem;
+}
+
 /* Flash Messages */
 .flash-messages {
     margin-bottom: var(--spacing-lg);
