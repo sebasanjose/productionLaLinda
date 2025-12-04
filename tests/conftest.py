@@ -137,11 +137,13 @@ def mock_db(monkeypatch):
         
         def fetchall(self):
             # If the query contains specific patterns, return appropriate mock data
-            if self.last_query and 'market_events me' in self.last_query and 'event_id' in self.last_query:
+            if self.last_query and 'market_events me' in self.last_query and 'flavor_name' in self.last_query:
                 return [{'event_id': 1, 'flavor_name': 'Beef', 'allocated': 5.0}]
             elif self.last_query and 'INSERT INTO' in self.last_query:
                 # For insert queries, just return empty list
                 return []
+            print(f"DEBUG: last_query={self.last_query}")
+            print(f"DEBUG: mock_data={self.mock_data}")
             return self.mock_data.get('fetchall', [])
         
         def fetchone(self):

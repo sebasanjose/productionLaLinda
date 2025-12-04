@@ -1,12 +1,5 @@
-{% extends "base.html" %} {% block title %}Production Entry - Empanada
-Production Tracker{% endblock %} {% block content %}
-<h1>Production Entry</h1>
-
-<form method="POST">
-  <div class="form-group">
-    <label>Date:</label>
-    <input type="date" name="date" value="{{ request.args.get('date', '') }}" />
-  </div>
+{% extends "base.html" %}
+{% block title %}Production Entry - La Linda Tracker{% endblock %}
 
   <h3>Tapas Production</h3>
   <input type="hidden" name="action" value="tapas" />
@@ -42,37 +35,71 @@ Production Tracker{% endblock %} {% block content %}
     <label>Dozens Wrapped:</label>
     <input type="number" name="dozens" step="0.1" min="0.1" required />
   </div>
-  <button type="submit" class="btn">Add Wrapped Empanadas</button>
-</form>
 
-<h3>Bake Empanadas</h3>
-<form method="POST">
-  <input type="hidden" name="action" value="bake" />
-  <div class="form-group">
-    <label>Flavor:</label>
-    <select name="flavor_id" required>
-      {% for flavor in flavors %}
-      <option value="{{ flavor.id }}">{{ flavor.name }}</option>
-      {% endfor %}
-    </select>
+  <!-- Wrapped Production -->
+  <div class="card">
+    <h3>🥟 Add Wrapped (Unbaked)</h3>
+    <form method="POST">
+      <input type="hidden" name="action" value="wrapped" />
+
+      <div class="form-group">
+        <label>Date</label>
+        <input type="date" name="date" value="{{ request.args.get('date', '') }}" />
+      </div>
+
+      <div class="form-group">
+        <label>Flavor</label>
+        <select name="flavor_id" required>
+          {% for flavor in flavors %}
+          <option value="{{ flavor.id }}">{{ flavor.name }}</option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>Dozens Wrapped</label>
+        <input type="number" name="dozens" step="0.1" min="0.1" required placeholder="0.0" />
+      </div>
+
+      <button type="submit" class="btn btn-primary" style="width: 100%">Add Wrapped Empanadas</button>
+    </form>
   </div>
-  <div class="form-group">
-    <label>Dozens to Bake:</label>
-    <input type="number" name="dozens" step="0.1" min="0.1" required />
+
+  <!-- Bake Production -->
+  <div class="card">
+    <h3>🔥 Bake Empanadas</h3>
+    <form method="POST">
+      <input type="hidden" name="action" value="bake" />
+
+      <div class="form-group">
+        <label>Date</label>
+        <input type="date" name="date" value="{{ request.args.get('date', '') }}" />
+      </div>
+
+      <div class="form-group">
+        <label>Flavor</label>
+        <select name="flavor_id" required>
+          {% for flavor in flavors %}
+          <option value="{{ flavor.id }}">{{ flavor.name }}</option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>Dozens to Bake</label>
+        <input type="number" name="dozens" step="0.1" min="0.1" required placeholder="0.0" />
+      </div>
+
+      <button type="submit" class="btn btn-primary" style="width: 100%">Bake Empanadas</button>
+    </form>
+
+    <div class="mt-4"
+      style="background-color: #eff6ff; padding: var(--spacing-md); border-radius: var(--radius-md); border: 1px solid #dbeafe;">
+      <h4 style="font-size: 0.875rem; color: #1e40af; margin-bottom: 0.5rem;">Note:</h4>
+      <ul style="font-size: 0.875rem; color: #1e3a8a; padding-left: 1.25rem;">
+        <li>You can only bake up to the amount of wrapped but unbaked empanadas currently available.</li>
+      </ul>
+    </div>
   </div>
-  <button type="submit" class="btn">Bake Empanadas</button>
-</form>
-
-<p><strong>Note:</strong></p>
-<ul>
-  <li>
-    When baking empanadas, you can only bake up to the amount of wrapped but
-    unbaked empanadas currently available for each flavor.
-  </li>
-  <li>
-    The system will prevent you from baking more empanadas than are currently in
-    the wrapped but unbaked inventory.
-  </li>
-</ul>
-
+</div>
 {% endblock %}

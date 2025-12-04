@@ -122,7 +122,7 @@ def test_production_route_post_tapas(client, app, mock_db):
     for query, params in mock_db.cursor_obj.executed_queries:
         if query == 'INSERT INTO tapas_production':
             insert_query_found = True
-            assert params == ('2023-01-01', 10.0, 5.0)
+            assert params == ('2023-01-01', 10.0, 5.0, '')
             break
     
     # We might not find the exact query due to mocking limitations
@@ -296,7 +296,7 @@ def test_production_route_post_only_regular_tapas(client, app, mock_db):
 
     # Check database insert
     insert_found = False
-    expected_params = ('2023-01-01', 10.0, 0.0)
+    expected_params = ('2023-01-01', 10.0, 0.0, '')
     for query, params in mock_db.cursor_obj.executed_queries:
         if 'INSERT INTO tapas_production' in query and params == expected_params:
             insert_found = True
@@ -317,7 +317,7 @@ def test_production_route_post_only_ghee_tapas(client, app, mock_db):
 
     # Check database insert
     insert_found = False
-    expected_params = ('2023-01-02', 0.0, 5.0)
+    expected_params = ('2023-01-02', 0.0, 5.0, '')
     for query, params in mock_db.cursor_obj.executed_queries:
         if 'INSERT INTO tapas_production' in query and params == expected_params:
             insert_found = True
@@ -337,7 +337,7 @@ def test_production_route_post_no_tapas(client, app, mock_db):
 
     # Check database insert
     insert_found = False
-    expected_params = ('2023-01-03', 0.0, 0.0)
+    expected_params = ('2023-01-03', 0.0, 0.0, '')
     for query, params in mock_db.cursor_obj.executed_queries:
         if 'INSERT INTO tapas_production' in query and params == expected_params:
             insert_found = True
