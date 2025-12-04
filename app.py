@@ -1,14 +1,29 @@
 from flask import Flask, render_template, request, redirect, url_for, flash
 import sqlite3
-from datetime import date
+from flask_sqlalchemy import SQLAlchemy
+from datetime import date, datetime
 
 app = Flask(__name__)
 app.secret_key = 'empanada-tracker-secret-key'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 def get_db_connection():
     conn = sqlite3.connect('empanada_tracker.db')
     conn.row_factory = sqlite3.Row
     return conn
+
+# Create the db object BEFORE defining any models
+db = SQLAlchemy(app)
+# Create the db object BEFORE defining any models
+
+class InventoryLog(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    item_type = db.Column(db.String(50), nullable=False)  # e.g., 'tapas'
+    change_type = db.Column(db.String(20), nullable=False)  # e.g., 'add', 'remove', 'edit'
+    quantity = db.Column(db.Integer, nullable=False)
+    reason = db.Column(db.String(200))  # Optional explanation
+    timestamp = db.Column(db.DateTime, default=datetime.utcnow)
+    # If user auth exists (e.g., User model), add: user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
 
 def get_wrapped_inventory(conn):
     result = conn.execute('''

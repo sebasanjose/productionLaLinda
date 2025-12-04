@@ -1,103 +1,140 @@
 {% extends "base.html" %}
 {% block title %}Production Entry - La Linda Tracker{% endblock %}
-
 {% block content %}
-<div class="mb-4">
-  <h1>Production Entry</h1>
-  <p class="text-muted">Record new production batches.</p>
-</div>
 
-<div class="grid grid-cols-2 gap-4">
-  <!-- Tapas Production -->
-  <div class="card">
-    <h3>🏭 Tapas Production</h3>
-    <form method="POST">
-      <input type="hidden" name="action" value="tapas" />
-
-      <div class="form-group">
-        <label>Date</label>
-        <input type="date" name="date" value="{{ request.args.get('date', '') }}" />
-      </div>
-
-      <div class="grid grid-cols-2 gap-4">
-        <div class="form-group">
-          <label>Regular (dozens)</label>
-          <input type="number" name="regular_dozens" step="0.1" min="0" placeholder="0.0" />
-        </div>
-        <div class="form-group">
-          <label>Ghee (dozens)</label>
-          <input type="number" name="ghee_dozens" step="0.1" min="0" placeholder="0.0" />
-        </div>
-      </div>
-
-      <button type="submit" class="btn btn-primary" style="width: 100%">Record Tapas Production</button>
-    </form>
+<h3>Tapas Production</h3>
+<form method="POST">
+  <input type="hidden" name="action" value="tapas" />
+  <div class="form-group">
+    <label>Regular Tapas (dozens):</label>
+    <input type="number" name="regular_dozens" step="0.1" min="0" />
+  </div>
+  <div class="form-group">
+    <label for="ghee_dozens">Ghee Dozens:</label>
+    <input
+      type="number"
+      step="0.1"
+      id="ghee_dozens"
+      name="ghee_dozens"
+      required
+    />
   </div>
 
-  <!-- Wrapped Production -->
-  <div class="card">
-    <h3>🥟 Add Wrapped (Unbaked)</h3>
-    <form method="POST">
-      <input type="hidden" name="action" value="wrapped" />
-
-      <div class="form-group">
-        <label>Date</label>
-        <input type="date" name="date" value="{{ request.args.get('date', '') }}" />
-      </div>
-
-      <div class="form-group">
-        <label>Flavor</label>
-        <select name="flavor_id" required>
-          {% for flavor in flavors %}
-          <option value="{{ flavor.id }}">{{ flavor.name }}</option>
-          {% endfor %}
-        </select>
-      </div>
-
-      <div class="form-group">
-        <label>Dozens Wrapped</label>
-        <input type="number" name="dozens" step="0.1" min="0.1" required placeholder="0.0" />
-      </div>
-
-      <button type="submit" class="btn btn-primary" style="width: 100%">Add Wrapped Empanadas</button>
-    </form>
+  <div class="form-group">
+    <label for="notes">Notes:</label>
+    <textarea
+      id="notes"
+      name="notes"
+      rows="2"
+      placeholder="Optional notes..."
+    ></textarea>
   </div>
 
-  <!-- Bake Production -->
-  <div class="card">
-    <h3>🔥 Bake Empanadas</h3>
-    <form method="POST">
-      <input type="hidden" name="action" value="bake" />
+  <button type="submit" class="btn">Record Production</button>
+</form>
 
-      <div class="form-group">
-        <label>Date</label>
-        <input type="date" name="date" value="{{ request.args.get('date', '') }}" />
-      </div>
+<!-- Wrapped Production -->
+<div class="card">
+  <h3>🥟 Add Wrapped (Unbaked)</h3>
+  <form method="POST">
+    <input type="hidden" name="action" value="wrapped" />
 
-      <div class="form-group">
-        <label>Flavor</label>
-        <select name="flavor_id" required>
-          {% for flavor in flavors %}
-          <option value="{{ flavor.id }}">{{ flavor.name }}</option>
-          {% endfor %}
-        </select>
-      </div>
-
-      <div class="form-group">
-        <label>Dozens to Bake</label>
-        <input type="number" name="dozens" step="0.1" min="0.1" required placeholder="0.0" />
-      </div>
-
-      <button type="submit" class="btn btn-primary" style="width: 100%">Bake Empanadas</button>
-    </form>
-
-    <div class="mt-4"
-      style="background-color: #eff6ff; padding: var(--spacing-md); border-radius: var(--radius-md); border: 1px solid #dbeafe;">
-      <h4 style="font-size: 0.875rem; color: #1e40af; margin-bottom: 0.5rem;">Note:</h4>
-      <ul style="font-size: 0.875rem; color: #1e3a8a; padding-left: 1.25rem;">
-        <li>You can only bake up to the amount of wrapped but unbaked empanadas currently available.</li>
-      </ul>
+    <div class="form-group">
+      <label>Date</label>
+      <input
+        type="date"
+        name="date"
+        value="{{ request.args.get('date', '') }}"
+      />
     </div>
+
+    <div class="form-group">
+      <label>Flavor</label>
+      <select name="flavor_id" required>
+        {% for flavor in flavors %}
+        <option value="{{ flavor.id }}">{{ flavor.name }}</option>
+        {% endfor %}
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label>Dozens Wrapped</label>
+      <input
+        type="number"
+        name="dozens"
+        step="0.1"
+        min="0.1"
+        required
+        placeholder="0.0"
+      />
+    </div>
+
+    <button type="submit" class="btn btn-primary" style="width: 100%">
+      Add Wrapped Empanadas
+    </button>
+  </form>
+</div>
+
+<!-- Bake Production -->
+<div class="card">
+  <h3>🔥 Bake Empanadas</h3>
+  <form method="POST">
+    <input type="hidden" name="action" value="bake" />
+
+    <div class="form-group">
+      <label>Date</label>
+      <input
+        type="date"
+        name="date"
+        value="{{ request.args.get('date', '') }}"
+      />
+    </div>
+
+    <div class="form-group">
+      <label>Flavor</label>
+      <select name="flavor_id" required>
+        {% for flavor in flavors %}
+        <option value="{{ flavor.id }}">{{ flavor.name }}</option>
+        {% endfor %}
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label>Dozens to Bake</label>
+      <input
+        type="number"
+        name="dozens"
+        step="0.1"
+        min="0.1"
+        required
+        placeholder="0.0"
+      />
+    </div>
+
+    <button type="submit" class="btn btn-primary" style="width: 100%">
+      Bake Empanadas
+    </button>
+  </form>
+
+  <div
+    class="mt-4"
+    style="
+      background-color: #eff6ff;
+      padding: var(--spacing-md);
+      border-radius: var(--radius-md);
+      border: 1px solid #dbeafe;
+    "
+  >
+    <h4 style="font-size: 0.875rem; color: #1e40af; margin-bottom: 0.5rem">
+      Note:
+    </h4>
+    <ul style="font-size: 0.875rem; color: #1e3a8a; padding-left: 1.25rem">
+      <li>
+        You can only bake up to the amount of wrapped but unbaked empanadas
+        currently available.
+      </li>
+    </ul>
   </div>
 </div>
+
 {% endblock %}
